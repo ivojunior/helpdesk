@@ -11,9 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { TicketPlus, Ticket, Settings, BarChart3, LogOut, ChevronDown } from 'lucide-react';
-import { authService } from '../services/auth-service';
+} from './ui/dropdown-menu'; 
+//import { DropdownMenu } from "radix-ui";
+import { TicketPlus, Ticket, Settings, BarChart3, LogOut, User } from 'lucide-react';
 import type { User as UserType } from '../App';
 
 interface MainLayoutProps {
@@ -25,7 +25,6 @@ type Page = 'tickets' | 'settings' | 'reports';
 
 export function MainLayout({ user, onLogout }: MainLayoutProps) {
   const [currentPage, setCurrentPage] = useState<Page>('tickets');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const navigation = [
     { id: 'tickets' as Page, label: 'Chamados', icon: Ticket },
@@ -33,33 +32,21 @@ export function MainLayout({ user, onLogout }: MainLayoutProps) {
     { id: 'settings' as Page, label: 'Configurações', icon: Settings },
   ];
 
-  const handleLogout = () => {
-    authService.logout();
-    setIsDropdownOpen(false);
-    onLogout();
-  };
-
-  const handleMenuItemClick = () => {
-    setIsDropdownOpen(false);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-600 rounded-lg">
                 <TicketPlus className="size-5 text-white" />
               </div>
               <div>
-                <h1 className="text-slate-900 font-semibold">Helpdesk</h1>
-                <p className="text-slate-600 text-xs">Grupo LGH</p>
+                <h1 className="text-slate-900">Helpdesk</h1>
+                <p className="text-slate-600">Grupo LGH</p>
               </div>
             </div>
 
-            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-2">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -77,69 +64,38 @@ export function MainLayout({ user, onLogout }: MainLayoutProps) {
               })}
             </nav>
 
-            {/* User Dropdown Menu - CORRIGIDO */}
-            <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  className="flex items-center gap-2 p-1 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  aria-label="Menu do usuário"
-                >
+                <button /*variant="ghost"*/ className="flex items-center gap-2">
                   <Avatar className="size-8">
                     <AvatarImage src={user.picture} alt={user.name} />
-                    <AvatarFallback className="bg-blue-600 text-white">
-                      {user.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')
-                        .toUpperCase()}
+                    <AvatarFallback>
+                      {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="hidden sm:inline text-sm font-medium text-slate-900">
-                    {user.name}
-                  </span>
-                  <ChevronDown className="size-4 text-slate-600" />
+                  <span className="hidden sm:inline">{user.name}</span>
                 </button>
               </DropdownMenuTrigger>
-
-              {/* Content - Corrigido com z-index alto e posicionamento */}
-              <DropdownMenuContent
-                align="end"
-                className="w-56 z-[1000]"
-                side="bottom"
-                sideOffset={8}
-              >
-                {/* User Info */}
-                <DropdownMenuLabel className="flex flex-col gap-1">
-                  <p className="text-sm font-semibold text-slate-900">{user.name}</p>
-                  <p className="text-xs text-slate-600 font-normal">{user.email}</p>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div>
+                    <p>{user.name}</p>
+                    <p className="text-slate-600">{user.email}</p>
+                  </div>
                 </DropdownMenuLabel>
-
                 <DropdownMenuSeparator />
-
-                {/* Settings Option */}
-                <DropdownMenuItem
-                  onClick={() => {
-                    setCurrentPage('settings');
-                    handleMenuItemClick();
-                  }}
-                  className="cursor-pointer flex items-center gap-2"
-                >
-                  <Settings className="size-4" />
-                  <span>Configurações</span>
+                <DropdownMenuItem onClick={() => setCurrentPage('settings')}>
+                  <Settings className="size-4 mr-2" />
+                  Configurações
                 </DropdownMenuItem>
-
                 <DropdownMenuSeparator />
-
-                {/* Logout Option */}
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="cursor-pointer flex items-center gap-2 text-red-600 focus:text-red-600"
-                >
-                  <LogOut className="size-4" />
-                  <span>Sair</span>
+                <DropdownMenuItem onClick={onLogout} className="text-red-600">
+                  <LogOut className="size-4 mr-2" />
+                  Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            
           </div>
 
           {/* Mobile Navigation */}
