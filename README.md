@@ -1,11 +1,11 @@
 
-  # Helpdesk Application
+  # Helpdesk Grupo LGH
 
-  This is a code bundle for Helpdesk Application. The original project is available at https://www.figma.com/design/nXERDhvVb5XhOAHshnYlK6/Helpdesk-Application.
+  Este é um pacote de código para um aplicativo de Helpdesk. O projeto original está disponível em https://www.figma.com/design/nXERDhvVb5XhOAHshnYlK6/Helpdesk-Application.
 
-  ## Running the code
+  ## Executando o código
 
-  Run `npm i` to install the dependencies.
+  Execute `npm i` para instalar as dependências.
 
-  Run `npm run dev` to start the development server.
+  Execute `npm run dev` para iniciar o servidor de desenvolvimento.
   
